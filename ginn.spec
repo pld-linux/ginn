@@ -15,7 +15,10 @@ BuildRequires:	xorg-lib-libXtst-devel >= 1.1.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-A deamon with jinn-like wish-granting capabilities: it gives applications the ability to support a subset of multi-touch gestures without having to explicitly program to GEIS or multi-touch GTK/Qt libs.
+A deamon with jinn-like wish-granting capabilities: it gives
+applications the ability to support a subset of multi-touch gestures
+without having to explicitly program to GEIS or multi-touch GTK/Qt
+libs.
 
 %prep
 %setup -q
@@ -26,7 +29,6 @@ A deamon with jinn-like wish-granting capabilities: it gives applications the ab
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
@@ -36,9 +38,9 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog README
-%dir %{_sysconfdir}/ginn
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/ginn/wishes.xml
+%dir %{_sysconfdir}/%{name}
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/%{name}/wishes.xml
 %attr(755,root,root) %{_bindir}/ginn
-%dir %{_datadir}/ginn
-%{_datadir}/ginn/wishes.xml
+%dir %{_datadir}/%{name}
+%{_datadir}/%{maname}/wishes.xml
 %{_mandir}/man1/ginn.1*
