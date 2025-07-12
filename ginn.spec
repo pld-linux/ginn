@@ -1,7 +1,7 @@
 Summary:	Gesture Injector: No-GEIS, No-Toolkits
 Name:		ginn
 Version:	0.2.6
-Release:	1
+Release:	2
 License:	LGPL v3
 Group:		Applications
 Source0:	https://launchpad.net/ginn/0.x/0.2.6/+download/%{name}-%{version}.tar.bz2
