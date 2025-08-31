@@ -1,0 +1,92 @@
+--- ginn-0.2.6/src/config.c.orig	2012-07-30 21:53:11.000000000 +0200
++++ ginn-0.2.6/src/config.c	2025-08-31 15:23:07.229129179 +0200
+@@ -17,8 +17,12 @@
+  */
+ 
+ #include "config.h"
++#include <stdlib.h>
+ #include <libxml/parser.h>
+ 
++void inita(struct apps *ap);
++void initw(struct wish *wp);
++
+ void debugOut(struct wish *wp)
+ {
+     int i;
+@@ -53,7 +57,7 @@ void ginn_config_close(struct ginn_confi
+ 
+ static void print_node(const xmlNode * root, int depth)
+ {
+-    xmlNode *node;
++    const xmlNode *node;
+     for (node = root; node; node = node->next) {
+         int i;
+         if (node->type != XML_ELEMENT_NODE)
+@@ -92,7 +96,7 @@ static int ginn_str2bool(const char *str
+     return -2;
+ }
+ 
+-void store_1config(xmlNode * node, struct wish *wp, int *position)
++void store_1config(const xmlNode * node, struct wish *wp, int *position)
+ {
+     if (0 == strcmp(node->name, "wish")) {
+         // printf(" gesture %s fingers %s ",(xmlGetProp(node, "gesture")),(xmlGetProp(node, "fingers")));
+@@ -155,7 +159,7 @@ void
+ parse_node(const xmlNode * root, int depth, struct wish *wp,
+            struct apps *ap)
+ {
+-    xmlNode *node;
++    const xmlNode *node;
+     int position = 2;
+     for (node = root; node; node = node->next) {
+         if (node->type != XML_ELEMENT_NODE)
+--- ginn-0.2.6/src/ginn.c.orig	2025-08-31 15:36:28.711453843 +0200
++++ ginn-0.2.6/src/ginn.c	2025-08-31 15:36:33.201429519 +0200
+@@ -33,6 +33,17 @@
+ #include <X11/Xlib.h>
+ #include <X11/keysym.h>
+ 
++char *getCurrentApp(void);
++void injMixBtnKey(KeySym ks, int btn, char *modifiers[]);
++void injButton(int btn, char *modifiers[]);
++void injKey(KeySym ks, char *modifiers[]);
++void movePointer(int x, int y);
++int ginn_config_open(struct ginn_config *cfg, const char *path);
++void ginn_config_print(const struct ginn_config *cfg);
++void ginn_config_store(const struct ginn_config *cfg, struct wish *w, struct apps *a);
++void openDisplay(void);
++void closeDisplay(void);
++
+ att config_attr[25] = {[0 ... 24] = {.attrName = "",.val = 0,.valMax = 0}
+ };
+ 
+@@ -560,7 +571,7 @@ int main(int argc, char *argv[])
+         return 1;
+     }
+ 
+-    status = geis_subscribe(instance, GEIS_ALL_INPUT_DEVICES, sub_gestures_list,        //  GEIS_ALL_GESTURES,
++    status = geis_subscribe(instance, GEIS_ALL_INPUT_DEVICES, (const char**)sub_gestures_list,        //  GEIS_ALL_GESTURES,
+                             &gesture_funcs, NULL);
+     if (status != GEIS_STATUS_SUCCESS) {
+         fprintf(stderr, "error subscribing to gestures\n");
+--- ginn-0.2.6/src/xt.c.orig	2012-07-30 21:53:11.000000000 +0200
++++ ginn-0.2.6/src/xt.c	2025-08-31 15:37:37.327748784 +0200
+@@ -17,6 +17,7 @@
+  * Author: Mohamed-Ikbel Boulabiar <boulabiar@gmail.com>
+  */
+ 
++#include <string.h>
+ #include <X11/X.h>
+ #include <X11/extensions/XTest.h>
+ #include <X11/keysym.h>
+--- ginn-0.2.6/src/bamf.c.orig	2012-07-30 21:53:11.000000000 +0200
++++ ginn-0.2.6/src/bamf.c	2025-08-31 15:37:57.377640164 +0200
+@@ -30,7 +30,7 @@ char *getCurrentApp()
+ {
+     g_type_init();
+     char *deskfile, *appName;
+-    char *temp;
++    const char *temp;
+ 
+     BamfApplication *app =
+         bamf_matcher_get_active_application(bamf_matcher_get_default());
