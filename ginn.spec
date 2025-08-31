@@ -1,4 +1,5 @@
 Summary:	Gesture Injector: No-GEIS, No-Toolkits
+Summary(pl.UTF-8):	Wstrzykiwanie gestów - bez GEIS, bez toolkitów
 Name:		ginn
 Version:	0.2.6
 Release:	3
@@ -20,6 +21,11 @@ applications the ability to support a subset of multi-touch gestures
 without having to explicitly program to GEIS or multi-touch GTK/Qt
 libs.
 
+%description -l pl.UTF-8
+Demon o mocy spełniania życzeń w stylu dżina: umożliwa aplikacjom
+obsługę podzbioru gestów wielodotykowych bez potrzeby jawnego
+programowania GEIS lib wielodotykowych bibliotek GTK/Qt.
+
 %prep
 %setup -q
 
@@ -29,6 +35,7 @@ libs.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
